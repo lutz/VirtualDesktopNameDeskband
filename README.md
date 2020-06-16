@@ -6,7 +6,7 @@ This is a deskband to show the name of current virtual desktop. It based on the 
 
 This deskband is showing the name of current virtual desktop and implement the possibility to switch through the desktops via shortcut <kbd>CTRL</kbd>+\[<kbd>1</kbd>-<kbd>9</kbd>\].
 
-![](../../assets/taskbar.png)
+![Te](assets/taskbar.png)
 
 ## Installation
 
