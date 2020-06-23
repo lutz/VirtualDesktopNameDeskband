@@ -5,6 +5,8 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
+// https://stackoverflow.com/questions/604410/global-keyboard-capture-in-c-sharp-application
+
 namespace VirtualDesktopNameDeskband
 {
     class GlobalKeyboardHook : IDisposable
