@@ -32,7 +32,7 @@ namespace VirtualDesktopNameDeskband
         {
             InitializeComponent();
 
-            globalKeyboardHook = new GlobalKeyboardHook(new FormsKeys[] { FormsKeys.D, FormsKeys.Left, FormsKeys.Right, FormsKeys.F4, FormsKeys.D1, FormsKeys.D2, FormsKeys.D3, FormsKeys.D4, FormsKeys.D5, FormsKeys.D6, FormsKeys.D7, FormsKeys.D8, FormsKeys.D9 });
+            globalKeyboardHook = new GlobalKeyboardHook(new FormsKeys[] { FormsKeys.D, FormsKeys.Left, FormsKeys.Right, FormsKeys.F4, FormsKeys.D1, FormsKeys.D2, FormsKeys.D3, FormsKeys.D4, FormsKeys.D5, FormsKeys.D6, FormsKeys.D7, FormsKeys.D8, FormsKeys.D9, FormsKeys.R, FormsKeys.T });
             globalKeyboardHook.KeyboardPressed += GlobalKeyboardHook_KeyboardPressed;
 
             txtBlock.Text = Desktop.DesktopNameFromDesktop(Desktop.Current);
@@ -46,6 +46,12 @@ namespace VirtualDesktopNameDeskband
             {
                 if (Keyboard.IsKeyDown(FormsKeys.LWin))
                 {
+                    switch (e.KeyboardData.Key)
+                    {
+                        case FormsKeys.T: ((Action)(() => MoveCurrentWindow(Direction.Left))).IgnoreException(); break;
+                        case FormsKeys.R: ((Action)(() => MoveCurrentWindow(Direction.Right))).IgnoreException(); break;
+                    }
+
                     txtBlock.Text = Desktop.DesktopNameFromDesktop(Desktop.Current);
                 }
                 else
@@ -69,6 +75,20 @@ namespace VirtualDesktopNameDeskband
         }
 
         // Methods
+
+        void MoveCurrentWindow(Direction direction)
+        {
+            if (direction == Direction.Left)
+            {
+                Desktop.Current?.Left?.MoveActiveWindow();
+                Desktop.Current?.Left?.MakeVisible();
+            }
+            else
+            {
+                Desktop.Current?.Right?.MoveActiveWindow();
+                Desktop.Current?.Right?.MakeVisible();
+            }
+        }
 
         void SwitchTo(int index)
         {
