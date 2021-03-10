@@ -1,8 +1,6 @@
 ﻿using System.Reflection;
-using System.Resources;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using System.Windows;
 
 // Allgemeine Informationen über eine Assembly werden über die folgenden
 // Attribute gesteuert. Ändern Sie diese Attributwerte, um die Informationen zu ändern,
@@ -12,23 +10,27 @@ using System.Windows;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("VirtualDesktopNameDeskband")]
-[assembly: AssemblyCopyright("Copyright © Daniel Lutz 2021")]
+[assembly: AssemblyCopyright("Copyright ©  2021 Daniel Lutz")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
-// Wenn ComVisible auf "false" festgelegt wird, sind die Typen innerhalb dieser Assembly 
-// für COM-Komponenten unsichtbar.  Wenn Sie auf einen Typ in dieser Assembly von 
+// Durch Festlegen von ComVisible auf FALSE werden die Typen in dieser Assembly
+// für COM-Komponenten unsichtbar.  Wenn Sie auf einen Typ in dieser Assembly von
 // COM aus zugreifen müssen, sollten Sie das ComVisible-Attribut für diesen Typ auf "True" festlegen.
-[assembly: ComVisible(false)]
+[assembly: ComVisible(true)]
+
+// Die folgende GUID bestimmt die ID der Typbibliothek, wenn dieses Projekt für COM verfügbar gemacht wird
+[assembly: Guid("cc872b0c-af81-4f3f-8fa5-42aa859fe7e8")]
+
+// Versionsinformationen für eine Assembly bestehen aus den folgenden vier Werten:
+//
+//      Hauptversion
+//      Nebenversion
+//      Buildnummer
+//      Revision
+//
+// Sie können alle Werte angeben oder Standardwerte für die Build- und Revisionsnummern verwenden,
+// indem Sie "*" wie unten gezeigt eingeben:
+// [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("2.0.0.0")]
-[assembly: AssemblyFileVersion("0.0.0.0")]
-[assembly: Guid("360FF06F-AE31-4D4A-B6A0-C8402C287E80")]
-
-//Um mit dem Erstellen lokalisierbarer Anwendungen zu beginnen, legen Sie
-//<UICulture>ImCodeVerwendeteKultur</UICulture> in der .csproj-Datei
-//in einer <PropertyGroup> fest.  Wenn Sie in den Quelldateien beispielsweise Deutsch
-//(Deutschland) verwenden, legen Sie <UICulture> auf \"de-DE\" fest.  Heben Sie dann die Auskommentierung
-//des nachstehenden NeutralResourceLanguage-Attributs auf.  Aktualisieren Sie "en-US" in der nachstehenden Zeile,
-//sodass es mit der UICulture-Einstellung in der Projektdatei übereinstimmt.
-
-//[assembly: NeutralResourcesLanguage("en-US", UltimateResourceFallbackLocation.Satellite)]
+[assembly: AssemblyFileVersion("2.0.0.0")]

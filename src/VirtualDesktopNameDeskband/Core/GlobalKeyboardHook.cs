@@ -5,11 +5,9 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
-// https://stackoverflow.com/questions/604410/global-keyboard-capture-in-c-sharp-application
-
 namespace VirtualDesktopNameDeskband
 {
-    class GlobalKeyboardHook : IDisposable
+    internal class GlobalKeyboardHook : IDisposable
     {
         public event EventHandler<GlobalKeyboardHookEventArgs> KeyboardPressed;
 
@@ -29,7 +27,7 @@ namespace VirtualDesktopNameDeskband
             _user32LibraryHandle = LoadLibrary("User32");
             if (_user32LibraryHandle == IntPtr.Zero)
             {
-                int errorCode = Marshal.GetLastWin32Error();
+                var errorCode = Marshal.GetLastWin32Error();
                 throw new Win32Exception(errorCode, $"Failed to load library 'User32.dll'. Error {errorCode}: {new Win32Exception(Marshal.GetLastWin32Error()).Message}.");
             }
 
@@ -38,7 +36,7 @@ namespace VirtualDesktopNameDeskband
             _windowsHookHandle = SetWindowsHookEx(WH_KEYBOARD_LL, _hookProc, _user32LibraryHandle, 0);
             if (_windowsHookHandle == IntPtr.Zero)
             {
-                int errorCode = Marshal.GetLastWin32Error();
+                var errorCode = Marshal.GetLastWin32Error();
                 throw new Win32Exception(errorCode, $"Failed to adjust keyboard hooks for '{Process.GetCurrentProcess().ProcessName}'. Error {errorCode}: {new Win32Exception(Marshal.GetLastWin32Error()).Message}.");
             }
         }
@@ -52,7 +50,7 @@ namespace VirtualDesktopNameDeskband
                 {
                     if (!UnhookWindowsHookEx(_windowsHookHandle))
                     {
-                        int errorCode = Marshal.GetLastWin32Error();
+                        var errorCode = Marshal.GetLastWin32Error();
                         throw new Win32Exception(errorCode, $"Failed to remove keyboard hooks for '{Process.GetCurrentProcess().ProcessName}'. Error {errorCode}: {new Win32Exception(Marshal.GetLastWin32Error()).Message}.");
                     }
                     _windowsHookHandle = IntPtr.Zero;
@@ -66,7 +64,7 @@ namespace VirtualDesktopNameDeskband
             {
                 if (!FreeLibrary(_user32LibraryHandle)) // reduces reference to library by 1.
                 {
-                    int errorCode = Marshal.GetLastWin32Error();
+                    var errorCode = Marshal.GetLastWin32Error();
                     throw new Win32Exception(errorCode, $"Failed to unload library 'User32.dll'. Error {errorCode}: {new Win32Exception(Marshal.GetLastWin32Error()).Message}.");
                 }
                 _user32LibraryHandle = IntPtr.Zero;
@@ -88,7 +86,7 @@ namespace VirtualDesktopNameDeskband
         private IntPtr _user32LibraryHandle;
         private HookProc _hookProc;
 
-        delegate IntPtr HookProc(int nCode, IntPtr wParam, IntPtr lParam);
+        private delegate IntPtr HookProc(int nCode, IntPtr wParam, IntPtr lParam);
 
         [DllImport("kernel32.dll")]
         private static extern IntPtr LoadLibrary(string lpFileName);
@@ -107,7 +105,7 @@ namespace VirtualDesktopNameDeskband
         /// <param name="dwThreadId">thread identifier</param>
         /// <returns>If the function succeeds, the return value is the handle to the hook procedure.</returns>
         [DllImport("USER32", SetLastError = true)]
-        static extern IntPtr SetWindowsHookEx(int idHook, HookProc lpfn, IntPtr hMod, int dwThreadId);
+        private static extern IntPtr SetWindowsHookEx(int idHook, HookProc lpfn, IntPtr hMod, int dwThreadId);
 
         /// <summary>
         /// The UnhookWindowsHookEx function removes a hook procedure installed in a hook chain by the SetWindowsHookEx function.
@@ -127,7 +125,7 @@ namespace VirtualDesktopNameDeskband
         /// <param name="lParam">value passed to hook procedure</param>
         /// <returns>If the function succeeds, the return value is true.</returns>
         [DllImport("USER32", SetLastError = true)]
-        static extern IntPtr CallNextHookEx(IntPtr hHook, int code, IntPtr wParam, IntPtr lParam);
+        private static extern IntPtr CallNextHookEx(IntPtr hHook, int code, IntPtr wParam, IntPtr lParam);
 
         [StructLayout(LayoutKind.Sequential)]
         public struct LowLevelKeyboardInputEvent
@@ -141,7 +139,7 @@ namespace VirtualDesktopNameDeskband
             /// <summary>
             /// The VirtualCode converted to typeof(Keys) for higher usability.
             /// </summary>
-            public Keys Key { get { return (Keys)VirtualCode; } }
+            public Keys Key => (Keys)VirtualCode;
 
             /// <summary>
             /// A hardware scan code for the key. 
@@ -177,18 +175,18 @@ namespace VirtualDesktopNameDeskband
 
         // EDT: Replaced VkSnapshot(int) with RegisteredKeys(Keys[])
         public static Keys[] RegisteredKeys;
-        const int KfAltdown = 0x2000;
+        private const int KfAltdown = 0x2000;
         public const int LlkhfAltdown = (KfAltdown >> 8);
 
         public IntPtr LowLevelKeyboardProc(int nCode, IntPtr wParam, IntPtr lParam)
         {
-            bool fEatKeyStroke = false;
+            var fEatKeyStroke = false;
 
             var wparamTyped = wParam.ToInt32();
             if (Enum.IsDefined(typeof(KeyboardState), wparamTyped))
             {
-                object o = Marshal.PtrToStructure(lParam, typeof(LowLevelKeyboardInputEvent));
-                LowLevelKeyboardInputEvent p = (LowLevelKeyboardInputEvent)o;
+                var o = Marshal.PtrToStructure(lParam, typeof(LowLevelKeyboardInputEvent));
+                var p = (LowLevelKeyboardInputEvent)o;
 
                 var eventArguments = new GlobalKeyboardHookEventArgs(p, (KeyboardState)wparamTyped);
 
@@ -198,7 +196,7 @@ namespace VirtualDesktopNameDeskband
                 var key = (Keys)p.VirtualCode;
                 if (RegisteredKeys == null || RegisteredKeys.Contains(key))
                 {
-                    EventHandler<GlobalKeyboardHookEventArgs> handler = KeyboardPressed;
+                    var handler = KeyboardPressed;
                     handler?.Invoke(this, eventArguments);
 
                     fEatKeyStroke = eventArguments.Handled;
@@ -209,9 +207,12 @@ namespace VirtualDesktopNameDeskband
         }
     }
 
-    class GlobalKeyboardHookEventArgs : HandledEventArgs
+    internal class GlobalKeyboardHookEventArgs : HandledEventArgs
     {
-        public GlobalKeyboardHookEventArgs(GlobalKeyboardHook.LowLevelKeyboardInputEvent keyboardData, GlobalKeyboardHook.KeyboardState keyboardState) => (KeyboardData, KeyboardState) = (keyboardData, keyboardState);
+        public GlobalKeyboardHookEventArgs(GlobalKeyboardHook.LowLevelKeyboardInputEvent keyboardData, GlobalKeyboardHook.KeyboardState keyboardState)
+        {
+            (KeyboardData, KeyboardState) = (keyboardData, keyboardState);
+        }
 
         public GlobalKeyboardHook.KeyboardState KeyboardState { get; }
         public GlobalKeyboardHook.LowLevelKeyboardInputEvent KeyboardData { get; }

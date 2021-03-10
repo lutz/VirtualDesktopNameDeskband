@@ -1,4 +1,4 @@
-
+﻿
 @echo OFF
 title Install DeskBand
 @echo ON

@@ -34,13 +34,16 @@ namespace VirtualDesktopNameDeskband
             // 
             // lblDesktopName
             // 
+            this.lblDesktopName.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.lblDesktopName.AutoEllipsis = true;
             this.lblDesktopName.BackColor = System.Drawing.Color.Transparent;
             this.lblDesktopName.ForeColor = System.Drawing.Color.White;
             this.lblDesktopName.Location = new System.Drawing.Point(0, 0);
             this.lblDesktopName.Margin = new System.Windows.Forms.Padding(0);
             this.lblDesktopName.Name = "lblDesktopName";
-            this.lblDesktopName.Size = new System.Drawing.Size(144, 23);
+            this.lblDesktopName.Size = new System.Drawing.Size(100, 23);
             this.lblDesktopName.TabIndex = 0;
             this.lblDesktopName.Text = "Desktop 1";
             this.lblDesktopName.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -52,7 +55,7 @@ namespace VirtualDesktopNameDeskband
             this.BackColor = System.Drawing.Color.Black;
             this.Controls.Add(this.lblDesktopName);
             this.Name = "DeskbandControl";
-            this.Size = new System.Drawing.Size(150, 23);
+            this.Size = new System.Drawing.Size(100, 23);
             this.ResumeLayout(false);
 
         }

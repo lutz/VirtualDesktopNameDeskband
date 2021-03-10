@@ -6,9 +6,12 @@ namespace VirtualDesktopNameDeskband
 {
     [ComVisible(true)]
     [DisplayName("VirtualDeskNameDeskband")]
-    public class WebSearchDeskBand : SharpDeskBand
+    public class VirtualDeskNameBand : SharpDeskBand
     {
-        protected override System.Windows.Forms.UserControl CreateDeskBand() => new DeskbandControl();
+        protected override System.Windows.Forms.UserControl CreateDeskBand()
+        {
+            return new DeskbandControl();
+        }
 
         protected override BandOptions GetBandOptions()
         {

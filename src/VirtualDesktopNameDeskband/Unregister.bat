@@ -1,4 +1,4 @@
-@echo OFF
+﻿@echo OFF
 title Uninstall DeskBand
 @echo ON
 @setlocal enableextensions

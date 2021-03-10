@@ -4,7 +4,7 @@ using System.Windows.Forms;
 
 namespace VirtualDesktopNameDeskband
 {
-    class Keyboard
+    internal class Keyboard
     {
         #region User32.dll
 
@@ -15,6 +15,9 @@ namespace VirtualDesktopNameDeskband
 
         #endregion
 
-        public static bool IsKeyDown(Keys key) => Convert.ToBoolean(GetKeyState((int)key) & KEY_PRESSED);
+        public static bool IsKeyDown(Keys key)
+        {
+            return Convert.ToBoolean(GetKeyState((int)key) & KEY_PRESSED);
+        }
     }
 }
