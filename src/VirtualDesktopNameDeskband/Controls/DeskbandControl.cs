@@ -22,13 +22,28 @@ namespace VirtualDesktopNameDeskband
 
         private void _timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-            if (InvokeRequired)
+            try
             {
-                Invoke((MethodInvoker)(() => { lblDesktopName.Text = Desktop.DesktopNameFromDesktop(Desktop.Current); }));
+                if (InvokeRequired)
+                {
+                    Invoke((MethodInvoker)(() => { lblDesktopName.Text = Desktop.DesktopNameFromDesktop(Desktop.Current); }));
+                }
+                else
+                {
+                    lblDesktopName.Text = Desktop.DesktopNameFromDesktop(Desktop.Current);
+                }
             }
-            else
+            catch (System.Exception ignored)
             {
-                lblDesktopName.Text = Desktop.DesktopNameFromDesktop(Desktop.Current);
+
+                if (InvokeRequired)
+                {
+                    Invoke((MethodInvoker)(() => { lblDesktopName.Text = "..."; }));
+                }
+                else
+                {
+                    lblDesktopName.Text = "..";
+                }
             }
         }
 
