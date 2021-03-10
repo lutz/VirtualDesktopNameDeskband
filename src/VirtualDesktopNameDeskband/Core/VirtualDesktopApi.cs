@@ -268,26 +268,26 @@ namespace VirtualDesktop
 
         internal static IVirtualDesktop GetDesktop(int index)
         {   // get desktop with index
-            int count = VirtualDesktopManagerInternal.GetCount();
-            if (index < 0 || index >= count) throw new ArgumentOutOfRangeException("index");
-            IObjectArray desktops;
-            VirtualDesktopManagerInternal.GetDesktops(out desktops);
-            object objdesktop;
-            desktops.GetAt(index, typeof(IVirtualDesktop).GUID, out objdesktop);
+            var count = VirtualDesktopManagerInternal.GetCount();
+            if (index < 0 || index >= count)
+            {
+                throw new ArgumentOutOfRangeException("index");
+            }
+
+            VirtualDesktopManagerInternal.GetDesktops(out var desktops);
+            desktops.GetAt(index, typeof(IVirtualDesktop).GUID, out var objdesktop);
             Marshal.ReleaseComObject(desktops);
             return (IVirtualDesktop)objdesktop;
         }
 
         internal static int GetDesktopIndex(IVirtualDesktop desktop)
         { // get index of desktop
-            int index = -1;
-            Guid IdSearch = desktop.GetId();
-            IObjectArray desktops;
-            VirtualDesktopManagerInternal.GetDesktops(out desktops);
-            object objdesktop;
-            for (int i = 0; i < VirtualDesktopManagerInternal.GetCount(); i++)
+            var index = -1;
+            var IdSearch = desktop.GetId();
+            VirtualDesktopManagerInternal.GetDesktops(out var desktops);
+            for (var i = 0; i < VirtualDesktopManagerInternal.GetCount(); i++)
             {
-                desktops.GetAt(i, typeof(IVirtualDesktop).GUID, out objdesktop);
+                desktops.GetAt(i, typeof(IVirtualDesktop).GUID, out var objdesktop);
                 if (IdSearch.CompareTo(((IVirtualDesktop)objdesktop).GetId()) == 0)
                 {
                     index = i;
@@ -300,15 +300,13 @@ namespace VirtualDesktop
 
         internal static IApplicationView GetApplicationView(this IntPtr hWnd)
         { // get application view to window handle
-            IApplicationView view;
-            ApplicationViewCollection.GetViewForHwnd(hWnd, out view);
+            ApplicationViewCollection.GetViewForHwnd(hWnd, out var view);
             return view;
         }
 
         internal static string GetAppId(IntPtr hWnd)
         { // get Application ID to window handle
-            string appId;
-            hWnd.GetApplicationView().GetAppUserModelId(out appId);
+            hWnd.GetApplicationView().GetAppUserModelId(out var appId);
             return appId;
         }
     }
@@ -325,7 +323,7 @@ namespace VirtualDesktop
         [DllImport("user32.dll")]
         private static extern IntPtr GetForegroundWindow();
 
-        private IVirtualDesktop ivd;
+        private readonly IVirtualDesktop ivd;
         private Desktop(IVirtualDesktop desktop) { ivd = desktop; }
 
         public override int GetHashCode()
@@ -339,15 +337,9 @@ namespace VirtualDesktop
             return desk != null && object.ReferenceEquals(ivd, desk.ivd);
         }
 
-        public static int Count
-        { // return the number of desktops
-            get { return DesktopManager.VirtualDesktopManagerInternal.GetCount(); }
-        }
+        public static int Count => DesktopManager.VirtualDesktopManagerInternal.GetCount();
 
-        public static Desktop Current
-        { // returns current desktop
-            get { return new Desktop(DesktopManager.VirtualDesktopManagerInternal.GetCurrentDesktop()); }
-        }
+        public static Desktop Current => new Desktop(DesktopManager.VirtualDesktopManagerInternal.GetCurrentDesktop());
 
         public static Desktop FromIndex(int index)
         { // return desktop object from index (-> index = 0..Count-1)
@@ -356,8 +348,12 @@ namespace VirtualDesktop
 
         public static Desktop FromWindow(IntPtr hWnd)
         { // return desktop object to desktop on which window <hWnd> is displayed
-            if (hWnd == IntPtr.Zero) throw new ArgumentNullException();
-            Guid id = DesktopManager.VirtualDesktopManager.GetWindowDesktopId(hWnd);
+            if (hWnd == IntPtr.Zero)
+            {
+                throw new ArgumentNullException();
+            }
+
+            var id = DesktopManager.VirtualDesktopManager.GetWindowDesktopId(hWnd);
             return new Desktop(DesktopManager.VirtualDesktopManagerInternal.FindDesktop(ref id));
         }
 
@@ -368,7 +364,7 @@ namespace VirtualDesktop
 
         public static string DesktopNameFromDesktop(Desktop desktop)
         { // return name of desktop or "Desktop n" if it has no name
-            Guid guid = desktop.ivd.GetId();
+            var guid = desktop.ivd.GetId();
 
             // read desktop name in registry
             string desktopName = null;
@@ -388,7 +384,7 @@ namespace VirtualDesktop
 
         public static string DesktopNameFromIndex(int index)
         { // return name of desktop from index (-> index = 0..Count-1) or "Desktop n" if it has no name
-            Guid guid = DesktopManager.GetDesktop(index).GetId();
+            var guid = DesktopManager.GetDesktop(index).GetId();
 
             // read desktop name in registry
             string desktopName = null;
@@ -408,9 +404,9 @@ namespace VirtualDesktop
 
         public static int SearchDesktop(string partialName)
         { // get index of desktop with partial name, return -1 if no desktop found
-            int index = -1;
+            var index = -1;
 
-            for (int i = 0; i < DesktopManager.VirtualDesktopManagerInternal.GetCount(); i++)
+            for (var i = 0; i < DesktopManager.VirtualDesktopManagerInternal.GetCount(); i++)
             { // loop through all virtual desktops and compare partial name to desktop name
                 if (DesktopNameFromIndex(i).ToUpper().IndexOf(partialName.ToUpper()) >= 0)
                 {
@@ -432,7 +428,7 @@ namespace VirtualDesktop
             IVirtualDesktop fallbackdesktop;
             if (fallback == null)
             { // if no fallback is given use desktop to the left except for desktop 0.
-                Desktop dtToCheck = new Desktop(DesktopManager.GetDesktop(0));
+                var dtToCheck = new Desktop(DesktopManager.GetDesktop(0));
                 if (Equals(dtToCheck))
                 { // desktop 0: set fallback to second desktop (= "right" desktop)
                     DesktopManager.VirtualDesktopManagerInternal.GetAdjacentDesktop(ivd, 4, out fallbackdesktop); // 4 = RightDirection
@@ -443,8 +439,10 @@ namespace VirtualDesktop
                 }
             }
             else
+            {
                 // set fallback desktop
                 fallbackdesktop = fallback.ivd;
+            }
 
             DesktopManager.VirtualDesktopManagerInternal.RemoveDesktop(ivd, fallbackdesktop);
         }
@@ -457,10 +455,7 @@ namespace VirtualDesktop
             }
         }
 
-        public bool IsVisible
-        { // return true if this desktop is the current displayed one
-            get { return object.ReferenceEquals(ivd, DesktopManager.VirtualDesktopManagerInternal.GetCurrentDesktop()); }
-        }
+        public bool IsVisible => object.ReferenceEquals(ivd, DesktopManager.VirtualDesktopManagerInternal.GetCurrentDesktop());
 
         public void MakeVisible()
         { // make this desktop visible
@@ -471,12 +466,15 @@ namespace VirtualDesktop
         { // return desktop at the left of this one, null if none
             get
             {
-                IVirtualDesktop desktop;
-                int hr = DesktopManager.VirtualDesktopManagerInternal.GetAdjacentDesktop(ivd, 3, out desktop); // 3 = LeftDirection
+                var hr = DesktopManager.VirtualDesktopManagerInternal.GetAdjacentDesktop(ivd, 3, out var desktop); // 3 = LeftDirection
                 if (hr == 0)
+                {
                     return new Desktop(desktop);
+                }
                 else
+                {
                     return null;
+                }
             }
         }
 
@@ -484,20 +482,26 @@ namespace VirtualDesktop
         { // return desktop at the right of this one, null if none
             get
             {
-                IVirtualDesktop desktop;
-                int hr = DesktopManager.VirtualDesktopManagerInternal.GetAdjacentDesktop(ivd, 4, out desktop); // 4 = RightDirection
+                var hr = DesktopManager.VirtualDesktopManagerInternal.GetAdjacentDesktop(ivd, 4, out var desktop); // 4 = RightDirection
                 if (hr == 0)
+                {
                     return new Desktop(desktop);
+                }
                 else
+                {
                     return null;
+                }
             }
         }
 
         public void MoveWindow(IntPtr hWnd)
         { // move window to this desktop
-            int processId;
-            if (hWnd == IntPtr.Zero) throw new ArgumentNullException();
-            GetWindowThreadProcessId(hWnd, out processId);
+            if (hWnd == IntPtr.Zero)
+            {
+                throw new ArgumentNullException();
+            }
+
+            GetWindowThreadProcessId(hWnd, out var processId);
 
             if (System.Diagnostics.Process.GetCurrentProcess().Id == processId)
             { // window of process
@@ -507,15 +511,13 @@ namespace VirtualDesktop
                 }
                 catch // window of process, but we are not the owner
                 {
-                    IApplicationView view;
-                    DesktopManager.ApplicationViewCollection.GetViewForHwnd(hWnd, out view);
+                    DesktopManager.ApplicationViewCollection.GetViewForHwnd(hWnd, out var view);
                     DesktopManager.VirtualDesktopManagerInternal.MoveViewToDesktop(view, ivd);
                 }
             }
             else
             { // window of other process
-                IApplicationView view;
-                DesktopManager.ApplicationViewCollection.GetViewForHwnd(hWnd, out view);
+                DesktopManager.ApplicationViewCollection.GetViewForHwnd(hWnd, out var view);
                 try
                 {
                     DesktopManager.VirtualDesktopManagerInternal.MoveViewToDesktop(view, ivd);
@@ -535,19 +537,31 @@ namespace VirtualDesktop
 
         public bool HasWindow(IntPtr hWnd)
         { // return true if window is on this desktop
-            if (hWnd == IntPtr.Zero) throw new ArgumentNullException();
+            if (hWnd == IntPtr.Zero)
+            {
+                throw new ArgumentNullException();
+            }
+
             return ivd.GetId() == DesktopManager.VirtualDesktopManager.GetWindowDesktopId(hWnd);
         }
 
         public static bool IsWindowPinned(IntPtr hWnd)
         { // return true if window is pinned to all desktops
-            if (hWnd == IntPtr.Zero) throw new ArgumentNullException();
+            if (hWnd == IntPtr.Zero)
+            {
+                throw new ArgumentNullException();
+            }
+
             return DesktopManager.VirtualDesktopPinnedApps.IsViewPinned(hWnd.GetApplicationView());
         }
 
         public static void PinWindow(IntPtr hWnd)
         { // pin window to all desktops
-            if (hWnd == IntPtr.Zero) throw new ArgumentNullException();
+            if (hWnd == IntPtr.Zero)
+            {
+                throw new ArgumentNullException();
+            }
+
             var view = hWnd.GetApplicationView();
             if (!DesktopManager.VirtualDesktopPinnedApps.IsViewPinned(view))
             { // pin only if not already pinned
@@ -557,7 +571,11 @@ namespace VirtualDesktop
 
         public static void UnpinWindow(IntPtr hWnd)
         { // unpin window from all desktops
-            if (hWnd == IntPtr.Zero) throw new ArgumentNullException();
+            if (hWnd == IntPtr.Zero)
+            {
+                throw new ArgumentNullException();
+            }
+
             var view = hWnd.GetApplicationView();
             if (DesktopManager.VirtualDesktopPinnedApps.IsViewPinned(view))
             { // unpin only if not already unpinned
@@ -567,14 +585,22 @@ namespace VirtualDesktop
 
         public static bool IsApplicationPinned(IntPtr hWnd)
         { // return true if application for window is pinned to all desktops
-            if (hWnd == IntPtr.Zero) throw new ArgumentNullException();
+            if (hWnd == IntPtr.Zero)
+            {
+                throw new ArgumentNullException();
+            }
+
             return DesktopManager.VirtualDesktopPinnedApps.IsAppIdPinned(DesktopManager.GetAppId(hWnd));
         }
 
         public static void PinApplication(IntPtr hWnd)
         { // pin application for window to all desktops
-            if (hWnd == IntPtr.Zero) throw new ArgumentNullException();
-            string appId = DesktopManager.GetAppId(hWnd);
+            if (hWnd == IntPtr.Zero)
+            {
+                throw new ArgumentNullException();
+            }
+
+            var appId = DesktopManager.GetAppId(hWnd);
             if (!DesktopManager.VirtualDesktopPinnedApps.IsAppIdPinned(appId))
             { // pin only if not already pinned
                 DesktopManager.VirtualDesktopPinnedApps.PinAppID(appId);
@@ -583,9 +609,13 @@ namespace VirtualDesktop
 
         public static void UnpinApplication(IntPtr hWnd)
         { // unpin application for window from all desktops
-            if (hWnd == IntPtr.Zero) throw new ArgumentNullException();
+            if (hWnd == IntPtr.Zero)
+            {
+                throw new ArgumentNullException();
+            }
+
             var view = hWnd.GetApplicationView();
-            string appId = DesktopManager.GetAppId(hWnd);
+            var appId = DesktopManager.GetAppId(hWnd);
             if (DesktopManager.VirtualDesktopPinnedApps.IsAppIdPinned(appId))
             { // unpin only if pinned
                 DesktopManager.VirtualDesktopPinnedApps.UnpinAppID(appId);

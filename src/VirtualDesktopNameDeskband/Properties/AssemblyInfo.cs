@@ -12,7 +12,7 @@ using System.Windows;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("VirtualDesktopNameDeskband")]
-[assembly: AssemblyCopyright("Copyright © Daniel Lutz 2020")]
+[assembly: AssemblyCopyright("Copyright © Daniel Lutz 2021")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,6 +20,9 @@ using System.Windows;
 // für COM-Komponenten unsichtbar.  Wenn Sie auf einen Typ in dieser Assembly von 
 // COM aus zugreifen müssen, sollten Sie das ComVisible-Attribut für diesen Typ auf "True" festlegen.
 [assembly: ComVisible(false)]
+[assembly: AssemblyVersion("2.0.0.0")]
+[assembly: AssemblyFileVersion("0.0.0.0")]
+[assembly: Guid("360FF06F-AE31-4D4A-B6A0-C8402C287E80")]
 
 //Um mit dem Erstellen lokalisierbarer Anwendungen zu beginnen, legen Sie
 //<UICulture>ImCodeVerwendeteKultur</UICulture> in der .csproj-Datei
@@ -29,27 +32,3 @@ using System.Windows;
 //sodass es mit der UICulture-Einstellung in der Projektdatei übereinstimmt.
 
 //[assembly: NeutralResourcesLanguage("en-US", UltimateResourceFallbackLocation.Satellite)]
-
-
-[assembly:ThemeInfo(
-    ResourceDictionaryLocation.None, //Speicherort der designspezifischen Ressourcenwörterbücher
-                             //(wird verwendet, wenn eine Ressource auf der Seite nicht gefunden wird,
-                             // oder in den Anwendungsressourcen-Wörterbüchern nicht gefunden werden kann.)
-    ResourceDictionaryLocation.SourceAssembly //Speicherort des generischen Ressourcenwörterbuchs
-                                      //(wird verwendet, wenn eine Ressource auf der Seite nicht gefunden wird,
-                                      // designspezifischen Ressourcenwörterbuch nicht gefunden werden kann.)
-)]
-
-
-// Versionsinformationen für eine Assembly bestehen aus den folgenden vier Werten:
-//
-//      Hauptversion
-//      Nebenversion
-//      Buildnummer
-//      Revision
-//
-// Sie können alle Werte angeben oder Standardwerte für die Build- und Revisionsnummern verwenden,
-// indem Sie "*" wie unten gezeigt eingeben:
-// [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.1.0.0")]
-[assembly: AssemblyFileVersion("1.1.0.0")]

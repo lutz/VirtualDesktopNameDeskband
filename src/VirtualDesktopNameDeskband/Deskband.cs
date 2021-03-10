@@ -1,22 +1,26 @@
-﻿using CSDeskBand;
-using System;
+﻿using SharpShell.Attributes;
+using SharpShell.SharpDeskBand;
 using System.Runtime.InteropServices;
-using System.Windows;
 
 namespace VirtualDesktopNameDeskband
 {
     [ComVisible(true)]
-    [Guid("77B05500-B3CC-4565-BAFD-EDB512E5ADC8")]
-    [CSDeskBandRegistration(Name = "Virtual Desktop Name")]
-    public class Deskband : CSDeskBandWpf
+    [DisplayName("VirtualDeskNameDeskband")]
+    public class WebSearchDeskBand : SharpDeskBand
     {
-        public Deskband()
-        {
-            Options.MinHorizontalSize = new Size(70, 28);
-            Options.HeightCanChange = true;
-        }
-        protected override UIElement UIElement => new DeskbandView();
+        protected override System.Windows.Forms.UserControl CreateDeskBand() => new DeskbandControl();
 
-        protected override void DeskbandOnClosed() => (UIElement as DeskbandView)?.Close();
+        protected override BandOptions GetBandOptions()
+        {
+            return new BandOptions
+            {
+                HasVariableHeight = false,
+                IsSunken = false,
+                ShowTitle = true,
+                Title = "VirtualDeskNameDeskband",
+                UseBackgroundColour = false,
+                AlwaysShowGripper = false
+            };
+        }
     }
 }
