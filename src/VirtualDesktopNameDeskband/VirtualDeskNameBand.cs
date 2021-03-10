@@ -8,9 +8,11 @@ namespace VirtualDesktopNameDeskband
     [DisplayName("VirtualDeskNameDeskband")]
     public class VirtualDeskNameBand : SharpDeskBand
     {
+        private DeskbandControl deskbandControl;
+
         protected override System.Windows.Forms.UserControl CreateDeskBand()
         {
-            return new DeskbandControl();
+            return deskbandControl ?? (deskbandControl = new DeskbandControl());
         }
 
         protected override BandOptions GetBandOptions()
@@ -24,6 +26,13 @@ namespace VirtualDesktopNameDeskband
                 UseBackgroundColour = false,
                 AlwaysShowGripper = false
             };
+        }
+
+        protected override void OnBandRemoved()
+        {
+            deskbandControl?.Close();
+
+            base.OnBandRemoved();
         }
     }
 }

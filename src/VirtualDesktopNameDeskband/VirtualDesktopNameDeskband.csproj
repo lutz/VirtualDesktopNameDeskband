@@ -43,9 +43,6 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
-    </Reference>
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -55,12 +52,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Core\Keyboard.cs" />
-    <Compile Include="Core\GlobalKeyboardHook.cs" />
-    <Compile Include="DeskbandControl.cs">
+    <Compile Include="Controls\DeskbandControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="DeskbandControl.Designer.cs">
+    <Compile Include="Controls\DeskbandControl.Designer.cs">
       <DependentUpon>DeskbandControl.cs</DependentUpon>
     </Compile>
     <Compile Include="VirtualDeskNameBand.cs" />
@@ -78,12 +73,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="DeskbandControl.resx">
+    <EmbeddedResource Include="Controls\DeskbandControl.resx">
       <DependentUpon>DeskbandControl.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Controls\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
