@@ -1,14 +1,11 @@
 ﻿// Author: Markus Scholtes, 2020
-// Version 1.7, 2020-06-16
+// Version 1.8, 2020-12-03
 // Version for Windows 10 1809 and up
 // Compile with:
 // C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe VirtualDesktop.cs
 
 using System;
 using System.Runtime.InteropServices;
-
-// set attributes
-
 
 // Based on http://stackoverflow.com/a/32417530, Windows 10 SDK, github project Grabacr07/VirtualDesktop and own research
 
@@ -400,6 +397,29 @@ namespace VirtualDesktop
                 desktopName = "Desktop " + (index + 1).ToString();
             }
             return desktopName;
+        }
+
+        public static bool HasDesktopNameFromIndex(int index)
+        { // return true is desktop is named or false if it has no name
+            var guid = DesktopManager.GetDesktop(index).GetId();
+
+            // read desktop name in registry
+            string desktopName = null;
+            try
+            {
+                desktopName = (string)Microsoft.Win32.Registry.GetValue("HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\VirtualDesktops\\Desktops\\{" + guid.ToString() + "}", "Name", null);
+            }
+            catch { }
+
+            // name found?
+            if (string.IsNullOrEmpty(desktopName))
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
         }
 
         public static int SearchDesktop(string partialName)

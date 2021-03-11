@@ -29,7 +29,9 @@ namespace VirtualDesktopNameDeskband
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.lblDesktopName = new System.Windows.Forms.Label();
+            this.timer = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
             // 
             // lblDesktopName
@@ -48,10 +50,13 @@ namespace VirtualDesktopNameDeskband
             this.lblDesktopName.Text = "Desktop 1";
             this.lblDesktopName.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
+            // timer
+            // 
+            this.timer.Interval = 250;
+            this.timer.Tick += new System.EventHandler(this.Timer_Tick);
+            // 
             // DeskbandControl
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
             this.Controls.Add(this.lblDesktopName);
             this.Name = "DeskbandControl";
@@ -63,5 +68,6 @@ namespace VirtualDesktopNameDeskband
         #endregion
 
         private System.Windows.Forms.Label lblDesktopName;
+        private System.Windows.Forms.Timer timer;
     }
 }

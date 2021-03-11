@@ -10,23 +10,17 @@ namespace VirtualDesktopNameDeskband
     {
         private DeskbandControl deskbandControl;
 
-        protected override System.Windows.Forms.UserControl CreateDeskBand()
-        {
-            return deskbandControl ?? (deskbandControl = new DeskbandControl());
-        }
+        protected override System.Windows.Forms.UserControl CreateDeskBand() => deskbandControl ?? (deskbandControl = new DeskbandControl());
 
-        protected override BandOptions GetBandOptions()
+        protected override BandOptions GetBandOptions() => new BandOptions
         {
-            return new BandOptions
-            {
-                HasVariableHeight = false,
-                IsSunken = false,
-                ShowTitle = true,
-                Title = "VirtualDeskNameDeskband",
-                UseBackgroundColour = false,
-                AlwaysShowGripper = false
-            };
-        }
+            HasVariableHeight = false,
+            IsSunken = false,
+            ShowTitle = true,
+            Title = "VirtualDeskNameDeskband",
+            UseBackgroundColour = false,
+            AlwaysShowGripper = false
+        };
 
         protected override void OnBandRemoved()
         {
